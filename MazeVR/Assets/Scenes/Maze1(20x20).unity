@@ -80937,6 +80937,19 @@ Prefab:
       propertyPath: m_LocalScale.x
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1034712803240732, guid: e1c5a2279e1fffa43bcb7b52ef583266, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 33307800570456380, guid: e1c5a2279e1fffa43bcb7b52ef583266,
+        type: 2}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 4300000, guid: 9f02f93ab1369414e9a5ccc793670333, type: 3}
+    - target: {fileID: 1034712803240732, guid: e1c5a2279e1fffa43bcb7b52ef583266, type: 2}
+      propertyPath: m_StaticEditorFlags
+      value: 4294967295
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e1c5a2279e1fffa43bcb7b52ef583266, type: 2}
   m_IsPrefabParent: 0

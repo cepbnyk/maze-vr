@@ -9,11 +9,5 @@ EditorBuildSettings:
     path: 
     guid: 0d97462863a127c4ca2845103692ecd5
   - enabled: 1
-    path: Assets/Scenes/Splash.unity
-    guid: 7c3496c96730a644e994ce377bbd5795
-  - enabled: 1
-    path: Assets/start_menu.unity
-    guid: a4cb76bacb0089e46974abafaf58f1ec
-  - enabled: 1
     path: Assets/Scenes/Maze1(20x20).unity
     guid: 961af0899be541c419a8509b3e422ffa
