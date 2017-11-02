@@ -21,6 +21,7 @@ using System.Collections;
 /// The Scrollbar will also automatically update when the PagedScrollRect
 /// is scrolled directly.
 public class PagedScrollBar : Scrollbar {
+#if UNITY_HAS_GOOGLEVR && (UNITY_ANDROID || UNITY_EDITOR)
   public const string PAGED_SCROLL_RECT_PROP_NAME = "pagedScrollRect";
 
   [SerializeField]
@@ -64,21 +65,16 @@ public class PagedScrollBar : Scrollbar {
       float offset = value * (pagedScrollRect.PageCount - 1) * pagedScrollRect.PageSpacing;
       pagedScrollRect.SetScrollOffsetOverride(offset);
     } else {
-      // If the PageCount is 1 make sure we don't divide by zero by just setting the value to 0 directly.
-      if (pagedScrollRect.PageCount == 1) {
-        value = 0.0f;
-      } else {
-        // Calculate the desired a value of the scrollbar.
-        float desiredValue = (float) pagedScrollRect.ActivePageIndex / (pagedScrollRect.PageCount - 1);
+      // Calculate the desired a value of the scrollbar.
+      float desiredValue = (float)pagedScrollRect.ActivePageIndex / (pagedScrollRect.PageCount - 1);
 
-        // Animate towards the desired value.
-        value = Mathf.Lerp(value, desiredValue, Time.deltaTime * LERP_SPEED);
-      }
+      // Animate towards the desired value.
+      value = Mathf.Lerp(value, desiredValue, Time.deltaTime * LERP_SPEED);
     }
   }
 
-  public override void OnPointerDown(UnityEngine.EventSystems.PointerEventData eventData) {
-    base.OnPointerDown(eventData);
+  public override void OnBeginDrag(UnityEngine.EventSystems.PointerEventData eventData) {
+    base.OnBeginDrag(eventData);
     IsDragging = true;
   }
 
@@ -86,4 +82,5 @@ public class PagedScrollBar : Scrollbar {
     base.OnPointerUp(eventData);
     IsDragging = false;
   }
+#endif  // UNITY_HAS_GOOGLEVR &&(UNITY_ANDROID || UNITY_EDITOR
 }

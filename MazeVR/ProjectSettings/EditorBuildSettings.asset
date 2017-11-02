@@ -5,15 +5,18 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 0
-    path: 
-    guid: 0d97462863a127c4ca2845103692ecd5
   - enabled: 1
     path: Assets/Scenes/Splash.unity
     guid: 7c3496c96730a644e994ce377bbd5795
   - enabled: 1
-    path: Assets/start_menu.unity
+    path: Assets/Scenes/Loading.unity
+    guid: c0d91beb7507e524f8f47b6e14e7e280
+  - enabled: 1
+    path: Assets/Scenes/start_menu.unity
     guid: a4cb76bacb0089e46974abafaf58f1ec
+  - enabled: 1
+    path: Assets/Scenes/Loading1.unity
+    guid: 8ec598df061241a449786c1dbf17059a
   - enabled: 1
     path: Assets/Scenes/Maze1(20x20).unity
     guid: 961af0899be541c419a8509b3e422ffa

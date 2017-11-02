@@ -20,6 +20,7 @@ using UnityEngine.Events;
 // Used inside a scrolling page view. It contains abstract functions for handling
 // interactions between itself and the gvr controller.
 public abstract class BaseTile : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler, IGvrPointerHoverHandler {
+#if UNITY_HAS_GOOGLEVR && (UNITY_ANDROID || UNITY_EDITOR)
   protected Transform originalParent;
   protected Quaternion originalRotation;
   protected Vector3 originalPosition;
@@ -29,27 +30,11 @@ public abstract class BaseTile : MonoBehaviour, IPointerEnterHandler, IPointerEx
   protected bool isInteractable = true;
   protected bool isHovering = false;
 
-  // Ratio between meters (Unity Units) to the parent canvas that
-  // this tile is part of.
-  private float? metersToCanvasScale;
-
   /// Returns the tile's outer container's rect transform.
   public RectTransform Cell {
     get {
       return originalParent ? originalParent.GetComponent<RectTransform>() : null;
     }
-  }
-
-  public virtual void Reset() {
-    OnPointerExit(null);
-
-    transform.SetParent(originalParent, true);
-    transform.localRotation = originalRotation;
-    transform.localPosition = originalPosition;
-    transform.localScale = originalScale;
-
-    page = null;
-    metersToCanvasScale = null;
   }
 
   protected virtual void Awake() {
@@ -60,8 +45,14 @@ public abstract class BaseTile : MonoBehaviour, IPointerEnterHandler, IPointerEx
   }
 
   protected virtual void OnEnable() {
-    Reset();
+    OnPointerExit(null);
+
+    transform.SetParent(originalParent, true);
+    transform.localRotation = originalRotation;
+    transform.localPosition = originalPosition;
+    transform.localScale = originalScale;
   }
+#endif  // UNITY_HAS_GOOGLEVR && (UNITY_ANDROID || UNITY_EDITOR)
 
   public abstract void OnPointerEnter(PointerEventData eventData);
 
@@ -69,6 +60,7 @@ public abstract class BaseTile : MonoBehaviour, IPointerEnterHandler, IPointerEx
 
   public abstract void OnGvrPointerHover(PointerEventData eventData);
 
+#if UNITY_HAS_GOOGLEVR && (UNITY_ANDROID || UNITY_EDITOR)
   public bool IsInteractable {
     get {
       return isInteractable;
@@ -94,11 +86,7 @@ public abstract class BaseTile : MonoBehaviour, IPointerEnterHandler, IPointerEx
   }
 
   protected float GetMetersToCanvasScale() {
-    if (metersToCanvasScale == null) {
-      metersToCanvasScale = GvrUIHelpers.GetMetersToCanvasScale(transform);
-    }
-
-    return metersToCanvasScale.Value;
+    return GvrUIHelpers.GetMetersToCanvasScale(transform);
   }
 
   private void SetEventTriggersInteractable(bool interactable) {
@@ -139,4 +127,5 @@ public abstract class BaseTile : MonoBehaviour, IPointerEnterHandler, IPointerEx
       graphic.raycastTarget = isRaycastTarget;
     }
   }
+#endif  // UNITY_HAS_GOOGLEVR && (UNITY_ANDROID || UNITY_EDITOR)
 }

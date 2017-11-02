@@ -79,7 +79,7 @@ public static class GvrAudio {
         Debug.LogError("Only 'Stereo' speaker mode is supported by GVR Audio.");
         return;
       }
-      Initialize((int) quality, sampleRate, numChannels, framesPerBuffer);
+      Initialize(quality, sampleRate, numChannels, framesPerBuffer);
       listenerTransform = listener.transform;
 
       initialized = true;
@@ -122,11 +122,11 @@ public static class GvrAudio {
     return soundfieldId;
   }
 
-  /// Updates the |soundfield| with given |id| and its properties.
+  /// Destroys the soundfield with given |id|.
   /// @note This should only be called from the main Unity thread.
-  public static void UpdateAudioSoundfield (int id, GvrAudioSoundfield soundfield) {
+  public static void DestroyAudioSoundfield (int id) {
     if (initialized) {
-      SetSourceBypassRoomEffects(id, soundfield.bypassRoomEffects);
+      DestroySoundfield(id);
     }
   }
 
@@ -135,7 +135,7 @@ public static class GvrAudio {
   public static int CreateAudioSource (bool hrtfEnabled) {
     int sourceId = -1;
     if (initialized) {
-      sourceId = CreateSoundObject(hrtfEnabled);
+      sourceId = CreateSource(hrtfEnabled);
     }
     return sourceId;
   }
@@ -195,11 +195,10 @@ public static class GvrAudio {
     if (initialized) {
       Vector3 listenerPosition = listenerTransform.position;
       Vector3 sourceFromListener = sourceTransform.position - listenerPosition;
-      int numHits = Physics.RaycastNonAlloc(listenerPosition, sourceFromListener, occlusionHits,
-                                            sourceFromListener.magnitude, occlusionMaskValue);
-      for (int i = 0; i < numHits; ++i) {
-        if (occlusionHits[i].transform != listenerTransform &&
-            occlusionHits[i].transform != sourceTransform) {
+      RaycastHit[] hits = Physics.RaycastAll(listenerPosition, sourceFromListener,
+                                             sourceFromListener.magnitude, occlusionMaskValue);
+      foreach (RaycastHit hit in hits) {
+        if (hit.transform != listenerTransform && hit.transform != sourceTransform) {
           occlusion += 1.0f;
         }
       }
@@ -271,13 +270,10 @@ public static class GvrAudio {
   /// Maximum allowed reflectivity multiplier of a room surface material.
   public const float maxReflectivity = 2.0f;
 
-  /// Maximum allowed number of raycast hits for occlusion computation per source.
-  public const int maxNumOcclusionHits = 12;
-
   /// Source occlusion detection rate in seconds.
   public const float occlusionDetectionInterval = 0.2f;
 
-  /// Number of first-order ambisonic input channels.
+  // Number of first-order ambisonic input channels.
   public const int numFoaChannels = 4;
 
   [StructLayout(LayoutKind.Sequential)]
@@ -325,9 +321,9 @@ public static class GvrAudio {
   // Converts given |position| and |rotation| from Unity space to audio space.
   private static void ConvertAudioTransformFromUnity (ref Vector3 position,
                                                       ref Quaternion rotation) {
-    transformMatrix = Pose3D.FlipHandedness(Matrix4x4.TRS(position, rotation, Vector3.one));
-    position = transformMatrix.GetColumn(3);
-    rotation = Quaternion.LookRotation(transformMatrix.GetColumn(2), transformMatrix.GetColumn(1));
+    pose.SetRightHanded(Matrix4x4.TRS(position, rotation, Vector3.one));
+    position = pose.Position;
+    rotation = pose.Orientation;
   }
 
   // Returns room properties of the given |room|.
@@ -372,14 +368,11 @@ public static class GvrAudio {
   // Listener transform.
   private static Transform listenerTransform = null;
 
-  // Pre-allocated raycast hit list for occlusion computation.
-  private static RaycastHit[] occlusionHits = new RaycastHit[maxNumOcclusionHits];
-
   // Occlusion layer mask.
   private static int occlusionMaskValue = -1;
 
-  // 4x4 transformation matrix to be used in transform space conversion.
-  private static Matrix4x4 transformMatrix = Matrix4x4.identity;
+  // 3D pose instance to be used in transform space conversion.
+  private static MutablePose3D pose = new MutablePose3D();
 
 #if UNITY_IOS
   private const string pluginName = "__Internal";
@@ -395,9 +388,12 @@ public static class GvrAudio {
   [DllImport(pluginName)]
   private static extern int CreateSoundfield (int numChannels);
 
+  [DllImport(pluginName)]
+  private static extern void DestroySoundfield (int soundfieldId);
+
   // Source handlers.
   [DllImport(pluginName)]
-  private static extern int CreateSoundObject (bool enableHrtf);
+  private static extern int CreateSource (bool enableHrtf);
 
   [DllImport(pluginName)]
   private static extern void DestroySource (int sourceId);
@@ -420,7 +416,7 @@ public static class GvrAudio {
 
   // System handlers.
   [DllImport(pluginName)]
-  private static extern void Initialize (int quality, int sampleRate, int numChannels,
+  private static extern void Initialize (Quality quality, int sampleRate, int numChannels,
                                          int framesPerBuffer);
 
   [DllImport(pluginName)]

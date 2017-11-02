@@ -17,6 +17,7 @@ using UnityEditor;
 
 [CustomEditor(typeof(DemoInputManager))]
 public class DemoInputManagerEditor : Editor {
+#if UNITY_HAS_GOOGLEVR && UNITY_ANDROID
   SerializedProperty emulatedPlatformTypeProp;
   SerializedProperty gvrControllerMainProp;
   SerializedProperty gvrControllerPointerProp;
@@ -35,13 +36,8 @@ public class DemoInputManagerEditor : Editor {
   }
 
   public override void OnInspectorGUI() {
+    // Platform emulation tweaking does not apply on non-native integration versions of Unity.
     serializedObject.Update();
-
-    // Add clickable script field, as would have been provided by DrawDefaultInspector()
-    MonoScript script = MonoScript.FromMonoBehaviour (target as MonoBehaviour);
-    EditorGUI.BeginDisabledGroup (true);
-    EditorGUILayout.ObjectField ("Script", script, typeof(MonoScript), false);
-    EditorGUI.EndDisabledGroup ();
 
     EditorGUILayout.PropertyField(gvrControllerMainProp);
     EditorGUILayout.PropertyField(gvrControllerPointerProp);
@@ -56,4 +52,5 @@ public class DemoInputManagerEditor : Editor {
 
     serializedObject.ApplyModifiedProperties();
   }
+#endif  // UNITY_HAS_GOOGLEVR && UNITY_ANDROID
 }
