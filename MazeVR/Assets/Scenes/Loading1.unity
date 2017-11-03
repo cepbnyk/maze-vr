@@ -191,7 +191,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LoadingBar: {fileID: 1747084228}
   currentAmount: 0
-  speed: 20
+  speed: 18
 --- !u!1 &317264692
 GameObject:
   m_ObjectHideFlags: 0

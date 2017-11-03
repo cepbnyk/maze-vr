@@ -5,7 +5,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 public class InteractionScript : MonoBehaviour
 { //amount of time we need to look at something before doing something 
-    public float gazeTime = 3f; //a generic timer 
+    public float gazeTime = 2f; //a generic timer 
     private float timer; //a boolean to determine whether we are or aren't looking at something
     private bool gazedAt;
     private int level = 3;
