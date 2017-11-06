@@ -1,4 +1,4 @@
-#pragma strict
+﻿#pragma strict
 
 
 function OnTriggerEnter (obj : Collider) {

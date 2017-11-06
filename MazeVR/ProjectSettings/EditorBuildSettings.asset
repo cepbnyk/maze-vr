@@ -20,3 +20,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Maze1(20x20).unity
     guid: 961af0899be541c419a8509b3e422ffa
+  - enabled: 1
+    path: Assets/Scenes/End-Credits.unity
+    guid: 38e432684508b044a8f1e9f8cc88a36e

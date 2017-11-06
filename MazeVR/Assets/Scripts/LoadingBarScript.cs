@@ -21,7 +21,9 @@ public class LoadingBarScript : MonoBehaviour {
         }
         else
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             Application.LoadLevel("start_menu");
+#pragma warning restore CS0618 // Type or member is obsolete
         }
         LoadingBar.GetComponent<Image>().fillAmount = currentAmount / 100;
     }

@@ -3,7 +3,17 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - SF_Door
+  - Key
+  - Key1
+  - SF_Door1
+  - SF_Door2
+  - SF_Door3
+  - Exit_Button
+  - Credit
+  - MainMenu
+  - OptionMenu
   layers:
   - Default
   - TransparentFX
